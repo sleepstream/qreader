@@ -20,7 +20,9 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.SparseArray;
@@ -33,6 +35,7 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 /**
  * QREader Singleton.
@@ -80,6 +83,9 @@ public class QREader {
     }
   };
 
+
+
+
   /**
    * Instantiates a new QREader.
    *
@@ -106,6 +112,49 @@ public class QREader {
     else {
       this.barcodeDetector = builder.barcodeDetector;
     }
+  }
+
+
+  private Camera camera = null;
+  private boolean flashmode=false;
+
+  public void flashOnButton() {
+    camera=getCamera(cameraSource);
+    if (camera != null) {
+      try {
+        Camera.Parameters param = camera.getParameters();
+        param.setFlashMode(!flashmode?Camera.Parameters.FLASH_MODE_TORCH :Camera.Parameters.FLASH_MODE_OFF);
+        camera.setParameters(param);
+        flashmode = !flashmode;
+        if(flashmode){
+        }
+        else {
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+    }
+  }
+  private static Camera getCamera(@NonNull CameraSource cameraSource) {
+    Field[] declaredFields = CameraSource.class.getDeclaredFields();
+
+    for (Field field : declaredFields) {
+      if (field.getType() == Camera.class) {
+        field.setAccessible(true);
+        try {
+          Camera camera = (Camera) field.get(cameraSource);
+          if (camera != null) {
+            return camera;
+          }
+          return null;
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        }
+        break;
+      }
+    }
+    return null;
   }
 
   public void initAndStart(final SurfaceView surfaceView) {
