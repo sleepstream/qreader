@@ -57,12 +57,12 @@ ext {
   // Library Info
   libVersionCode = 12
   libVersionName = '2.1.3'
-  libPomUrl = 'https://github.com/nisrulz/qreader'
-  libGithubRepo = 'nisrulz/qreader'
+  libPomUrl = 'https://github.com/sleepstream/qreader'
+  libGithubRepo = 'sleepstream/qreader'
 
 
   libModuleName = 'qreader'
   libModuleDesc =
       'Android library that uses google\'s mobile vision api and simplify the QR code reading process'
-  libBintrayName = 'com.github.nisrulz:qreader'
+  libBintrayName = 'com.github.sleepstream:qreader'
 }
