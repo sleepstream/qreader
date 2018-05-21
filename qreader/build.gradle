@@ -38,7 +38,7 @@ android {
 dependencies {
   testCompile 'junit:junit:4.12'
   // Add Vision API
-  compile "com.google.android.gms:play-services-vision:$rootProject.ext.playServicesVersion"
+  compile "com.google.android.gms:play-services-vision:11.4.2"
 }
 
 apply from: 'https://raw.githubusercontent.com/nisrulz/JCenter/master/nishant-config.gradle'

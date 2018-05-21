@@ -71,9 +71,11 @@ public class MainActivity extends AppCompatActivity {
     restartbtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        restartActivity();
+          //restartActivity();
+          qrEader.turnOnOffTorch();
       }
     });
+
 
     // Setup SurfaceView
     // -----------------
@@ -81,10 +83,11 @@ public class MainActivity extends AppCompatActivity {
 
     if (hasCameraPermission) {
       // Setup QREader
-      setupQREader();
+        setupQREader();
     } else {
       RuntimePermissionUtil.requestPermission(MainActivity.this, cameraPerm, 100);
     }
+
   }
 
   void restartActivity() {

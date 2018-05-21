@@ -30,7 +30,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
@@ -82,8 +81,7 @@ public class QREader {
       surfaceHolder.removeCallback(this);
     }
   };
-
-
+  public boolean tourchEnable= false;
 
 
   /**
@@ -115,47 +113,6 @@ public class QREader {
   }
 
 
-  private Camera camera = null;
-  private boolean flashmode=false;
-
-  public void flashOnButton() {
-    camera=getCamera(cameraSource);
-    if (camera != null) {
-      try {
-        Camera.Parameters param = camera.getParameters();
-        param.setFlashMode(!flashmode?Camera.Parameters.FLASH_MODE_TORCH :Camera.Parameters.FLASH_MODE_OFF);
-        camera.setParameters(param);
-        flashmode = !flashmode;
-        if(flashmode){
-        }
-        else {
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-
-    }
-  }
-  private static Camera getCamera(@NonNull CameraSource cameraSource) {
-    Field[] declaredFields = CameraSource.class.getDeclaredFields();
-
-    for (Field field : declaredFields) {
-      if (field.getType() == Camera.class) {
-        field.setAccessible(true);
-        try {
-          Camera camera = (Camera) field.get(cameraSource);
-          if (camera != null) {
-            return camera;
-          }
-          return null;
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        }
-        break;
-      }
-    }
-    return null;
-  }
 
   public void initAndStart(final SurfaceView surfaceView) {
 
@@ -168,6 +125,14 @@ public class QREader {
             removeOnGlobalLayoutListener(surfaceView, this);
           }
         });
+  }
+
+  public void turnOnOffTorch()
+  {
+    tourchEnable = !tourchEnable;
+    stop();
+    init();
+    start();
   }
 
   /**
@@ -204,11 +169,24 @@ public class QREader {
         }
       });
 
-      cameraSource =
-          new CameraSource.Builder(context, barcodeDetector).setAutoFocusEnabled(autoFocusEnabled)
-              .setFacing(facing)
-              .setRequestedPreviewSize(width, height)
-              .build();
+
+
+      if(tourchEnable)
+      {
+        cameraSource =new CameraSource.Builder(context, barcodeDetector).setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)
+                .setFacing(facing)
+                .setFlashMode(Camera.Parameters.FLASH_MODE_TORCH)
+                .setRequestedPreviewSize(width, height)
+                .build();
+      }
+      else
+      {
+        cameraSource = new CameraSource.Builder(context, barcodeDetector).setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)
+                        .setFacing(facing)
+                        .setFlashMode(Camera.Parameters.FLASH_MODE_OFF)
+                        .setRequestedPreviewSize(width, height)
+                        .build();
+      }
     }
     else {
       Log.e(LOGTAG, "Barcode recognition libs are not downloaded and are not operational");
