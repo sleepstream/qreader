@@ -56,7 +56,7 @@ ext {
 
   // Library Info
   libVersionCode = 12
-  libVersionName = '2.1.2'
+  libVersionName = '2.1.3'
   libPomUrl = 'https://github.com/nisrulz/qreader'
   libGithubRepo = 'nisrulz/qreader'
 
